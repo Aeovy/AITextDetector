@@ -1,3 +1,0 @@
-首次运行可能需要下载bert预训练模型，需要挂梯子
-可以通过更改main.py中的getresult函数的model的参数('CNNModel1','BertSequenceClassifier'等，详情可以查看Use_model_Functions中的if判断)使用不同的模型，由于每个模型的参数文件比较大，只上传了1个模型的参数文件
-其他模型可以通过Training_Model生成
