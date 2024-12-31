@@ -6,7 +6,7 @@ from Model import *
 from ReadFile import *
 if __name__ == '__main__':
     modelname='robertaLargeBiLSTMTextCNN2DCNN'
-    writer=SummaryWriter("{0}}/test1".format(modelname))
+    writer=SummaryWriter("{0}/test1".format(modelname))
     #writer=SummaryWriter("robertaLarge/test1")
     train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True,prefetch_factor=2,num_workers=4)
     val_loader = DataLoader(val_dataset, batch_size=8, shuffle=False,num_workers=4)
