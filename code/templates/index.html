@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Sentence Detection</title>
+</head>
+<body>
+    <h1>AI Sentence Detection</h1>
+    <form method="POST">
+        <label for="input_text">Enter the sentence you want to detect:</label><br>
+        <textarea id="input_text" name="input_text" rows="4" cols="50">{{ input_text }}</textarea><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    {% if result is not none %}
+        <h2>The probability of the sentence being AI-generated is: {{ result }}</h2>
+    {% endif %}
+</body>
+</html>
