@@ -8,4 +8,3 @@ RUN python -c "from transformers import AutoModel; AutoModel.from_pretrained('hf
 RUN python -c "from transformers import AutoTokenizer; AutoTokenizer.from_pretrained('hfl/chinese-roberta-wwm-ext')"
 WORKDIR /code
 EXPOSE 5000
-CMD ["python", "app.py"]
