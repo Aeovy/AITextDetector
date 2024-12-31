@@ -5,7 +5,8 @@ from tqdm import tqdm
 from Model import *
 from ReadFile import *
 if __name__ == '__main__':
-    writer=SummaryWriter("robertaLargeBiLSTMTextCNN2DCNN/test1")
+    modelname='robertaLargeBiLSTMTextCNN2DCNN'
+    writer=SummaryWriter("{0}}/test1".format(modelname))
     #writer=SummaryWriter("robertaLarge/test1")
     train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True,prefetch_factor=2,num_workers=4)
     val_loader = DataLoader(val_dataset, batch_size=8, shuffle=False,num_workers=4)
@@ -68,9 +69,7 @@ if __name__ == '__main__':
                 attention_mask=attention_mask.to(device)
                 input_ids=input_ids.to(device)
                 labels=labels.to(device)
-
                 outputs = model(input_ids, attention_mask)
-
                 outputs = outputs.detach().cpu().numpy()
                 labels = labels.detach().cpu().numpy()
                 for i in outputs:
@@ -86,6 +85,6 @@ if __name__ == '__main__':
         writer.add_scalar('Accuracy/val', val_acc, epoch)
         writer.add_scalar('MarcoF1/val', val_f1, epoch)
         print(f'Epoch {epoch + 1}/{num_epochs}, Validation Accuracy: {val_acc:.4f}, Validation MarcoF1:{val_f1:.4f}')
-        torch.save(model.state_dict(), './model/epoch{0}.pth'.format(epoch+1))
+        torch.save(model.state_dict(), './model/{0}_epoch{1}.pth'.format(modelname,epoch+1))
     writer.close()  
-    torch.save(model.state_dict(), './model/roberta.pth')
+    torch.save(model.state_dict(), './model/{0}.pth'.format(modelname))
