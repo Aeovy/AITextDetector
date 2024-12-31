@@ -8,3 +8,6 @@
 /code/__pycache__
 /code/robertaLargeBiLSTMTextCNN2DCNN
 *.pth
+code/testmodel.py
+/code/model_visualization
+code/testmodel.py
