@@ -55,8 +55,8 @@ if __name__ == '__main__':
                 loss_sum+=loss
                 if schedulersteps%50==0:
                     scheduler.step(loss_sum/50)
-                loss_sum=0
-                schedulersteps=0
+                    loss_sum=0
+                    schedulersteps=0
         model.eval()
         val_preds = []
         val_labels = []
