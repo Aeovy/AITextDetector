@@ -3,7 +3,6 @@ from ReadFile import *
 from sklearn.metrics import accuracy_score,f1_score
 from torch.utils.tensorboard import SummaryWriter
 if __name__ == '__main__':
-    writer=SummaryWriter("model_visualization/test1")
     model=robertaLargeBiLSTMTextCNN2DCNN()
     model.load_state_dict(torch.load('./model/robertaLargeBiLSTMTextCNN2DCNN_epoch1.pth'))
     model.eval()
@@ -21,7 +20,6 @@ if __name__ == '__main__':
                 input_ids=input_ids.to('cpu')
                 labels=labels.to('cpu')
                 outputs = model(input_ids, attention_mask)
-                writer.add_graph(model, (input_ids, attention_mask))
                 outputs = outputs.detach().cpu().numpy()
                 labels = labels.detach().cpu().numpy()
                 for i in outputs:

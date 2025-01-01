@@ -4,6 +4,7 @@ from Model import *
 # 获取全连接层的权重
 model=robertaLargeBiLSTMTextCNN2DCNN()
 model.load_state_dict(torch.load('./model/robertaLargeBiLSTMTextCNN2DCNN.pth'))
+model.eval()
 for name, param in model.named_parameters():
     if "roberta" not in name:
         if param.grad is not None:

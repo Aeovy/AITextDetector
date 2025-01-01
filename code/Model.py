@@ -292,3 +292,77 @@ class robertaModelLarge(nn.Module):
         x = self.sigmoid(x)
         x = x.squeeze(1)
         return x
+class ConcatConvFeatures(nn.Module):
+    def __init__(self):
+        super(ConcatConvFeatures, self).__init__()
+
+    def forward(self, conv_features):
+        return torch.cat(conv_features, dim=1)
+class robertaLargeBiLSTMTextCNN2DCNN_visualtest(nn.Module):
+    def __init__(self, roberta_model_name='hfl/chinese-roberta-wwm-ext-large', dropout_prob=0.3):
+        super(robertaLargeBiLSTMTextCNN2DCNN_visualtest, self).__init__()
+
+        # Step 1: RoBERTa
+        self.roberta_encoder = AutoModel.from_pretrained(roberta_model_name, local_files_only=True)
+
+        # Step 2: BiLSTM
+        self.bilstm_layer = nn.LSTM(
+            input_size=1024,
+            hidden_size=512,
+            num_layers=1,
+            batch_first=True,
+            bidirectional=True
+        )
+
+        # Step 3: 1D Convolutions
+        self.conv1d_blocks = nn.ModuleList([
+            nn.Conv1d(1024, 512, kernel_size=3, padding=1),
+            nn.Conv1d(1024, 512, kernel_size=5, padding=2),
+            nn.Conv1d(1024, 512, kernel_size=7, padding=3)
+        ])
+        self.concat_conv_features = ConcatConvFeatures()
+        # Step 4: 2D Convolutions
+        self.conv2d_blocks = nn.Sequential(
+            nn.Conv2d(3, 128, kernel_size=(3, 3), padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=(2, 2)),
+            nn.Conv2d(128, 32, kernel_size=(3, 3), padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=(2, 2))
+        )
+
+        # Step 5: Fully Connected Layers
+        self.classifier = nn.Sequential(
+            nn.Linear(32 * 64 * 128, 256),
+            nn.Dropout(dropout_prob),
+            nn.Linear(256, 1),
+            nn.Sigmoid()
+        )
+        self.relu=nn.ReLU()
+        self.maxpool=nn.MaxPool1d(kernel_size=2)
+    def forward(self, input_ids, attention_mask):
+        # Step 1: RoBERTa
+        roberta_output = self.roberta_encoder(input_ids=input_ids, attention_mask=attention_mask)
+        last_hidden_state = roberta_output.last_hidden_state
+
+        # Step 2: BiLSTM
+        lstm_out, _ = self.bilstm_layer(last_hidden_state)
+        lstm_out = lstm_out.permute(0, 2, 1)
+
+        # Step 3: 1D Convolutions
+        conv_features = []
+        for conv in self.conv1d_blocks:
+            conv_x = conv(lstm_out)
+            conv_x = self.relu(conv_x)
+            conv_x = self.maxpool(conv_x)
+            conv_x = conv_x.permute(0, 2, 1).unsqueeze(1)
+            conv_features.append(conv_x)
+        #x=torch.cat(conv_features, dim=1)
+        x=self.concat_conv_features(conv_features)
+        # Step 4: 2D Convolutions
+        x = self.conv2d_blocks(x)
+
+        # Step 5: Fully Connected
+        x = x.view(x.size(0), -1)
+        x = self.classifier(x)
+        return x

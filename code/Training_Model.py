@@ -5,15 +5,15 @@ from tqdm import tqdm
 from Model import *
 from ReadFile import *
 if __name__ == '__main__':
-    modelname='robertaLargeBiLSTMTextCNN2DCNN'
+    modelname='robertaModelLarge'
     writer=SummaryWriter("{0}/test1".format(modelname))
     #writer=SummaryWriter("robertaLarge/test1")
     train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True,prefetch_factor=2,num_workers=4)
     val_loader = DataLoader(val_dataset, batch_size=8, shuffle=False,num_workers=4)
-    #model=robertaModelLarge()
+    model=robertaModelLarge()
     #model=robertaBiLSTMTextCNN()
     #model=robertaLargeBiLSTMTextCNN()
-    model=robertaLargeBiLSTMTextCNN2DCNN()
+    #model=robertaLargeBiLSTMTextCNN2DCNN()
     #model.load_state_dict(torch.load('./model/roberta.pth'))
     for name, param in model.named_parameters():
         if "roberta" in name:
