@@ -2,7 +2,7 @@ import torch
 import numpy as np
 from transformers import AutoTokenizer
 from Model import CNNModel1,robertaModel,robertaModelLarge,robertaBiLSTMTextCNN,robertaLargeBiLSTMTextCNN,robertaLargeBiLSTMTextCNN2DCNN,device
-tokenizer=AutoTokenizer.from_pretrained('hfl/chinese-roberta-wwm-ext',clean_up_tokenization_spaces=True,local_files_only=True)
+tokenizer=AutoTokenizer.from_pretrained('hfl/chinese-roberta-wwm-ext-large',clean_up_tokenization_spaces=True,local_files_only=True)
 def encoding(text,tokenizer=tokenizer):
     tokenizer = tokenizer
     coding = tokenizer.encode_plus(text, add_special_tokens=True, max_length=512, return_token_type_ids=False, padding='max_length', truncation=True, return_attention_mask=True, return_tensors='pt')
