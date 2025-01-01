@@ -1,5 +1,4 @@
-from Use_model_Functions import load_model,encoding,tokenizer,custom_mapping_function
-from transformers import BertTokenizer
+from Use_model_Functions import load_model,encoding,tokenizer
 import torch
 def predict(text,model,tokenizer = tokenizer):
     result=None
@@ -7,7 +6,6 @@ def predict(text,model,tokenizer = tokenizer):
         input_ids, attention_mask = encoding(text, tokenizer)
         result = model(input_ids, attention_mask)
         result=result.item()
-        #result=custom_mapping_function(result)
     return result
 if __name__ == '__main__':
     model=load_model('robertaLargeBiLSTMTextCNN2DCNN')
