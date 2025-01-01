@@ -5,6 +5,6 @@ COPY Dockerfile .
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 RUN python -c "from transformers import AutoModel; AutoModel.from_pretrained('hfl/chinese-roberta-wwm-ext-large')"
-RUN python -c "from transformers import AutoTokenizer; AutoTokenizer.from_pretrained('hfl/chinese-roberta-wwm-ext')"
+RUN python -c "from transformers import AutoTokenizer; AutoTokenizer.from_pretrained('hfl/chinese-roberta-wwm-ext-large')"
 WORKDIR /code
 EXPOSE 5000
