@@ -5,7 +5,7 @@ from Use_Model_By_Input import predict
 
 app = Flask(__name__)
 
-model = load_model('robertaLargeBiLSTMTextCNN')
+model = load_model('robertaLargeBiLSTMTextCNN2DCNN')
 tokenizer = tokenizer
 
 @app.route('/', methods=['GET', 'POST'])

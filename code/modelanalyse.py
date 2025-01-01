@@ -34,7 +34,7 @@ for name, param in model.named_parameters():
 
 from torch.utils.tensorboard import SummaryWriter
 
-writer = SummaryWriter("runs/trained_model_analysis")
+writer = SummaryWriter("runs/trained_model_analysis/robertaLargeBiLSTMTextCNN2DCNN")
 for name, param in model.named_parameters():
     if "roberta" not in name :
         writer.add_histogram(f"Weights/{name}", param.data.cpu(), 0)
