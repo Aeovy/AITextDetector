@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from Use_model_Functions import load_model, encoding,tokenizer
+from Use_model_Functions import load_model,tokenizer
 from Use_Model_By_Input import predict
 
 
