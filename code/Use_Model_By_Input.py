@@ -1,6 +1,7 @@
 from Use_model_Functions import load_model,encoding,tokenizer
 import torch
 def predict(text,model,tokenizer = tokenizer):
+    model.eval()
     result=None
     with torch.no_grad():
         input_ids, attention_mask = encoding(text, tokenizer)
