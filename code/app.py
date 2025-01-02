@@ -15,8 +15,8 @@ def index():
     if request.method == 'POST':
         text = request.form['input_text']
         if text:
-            result = predict(text, model, tokenizer)
+            result = round(predict(text, model, tokenizer),3)
+            result = f'{result * 100}%'
     return render_template('index.html', input_text=text, result=result)
-
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
