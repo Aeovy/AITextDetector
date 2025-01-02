@@ -3,7 +3,7 @@ from torchviz import make_dot
 from torch.utils.tensorboard import SummaryWriter
 import torch
 # 初始化 TensorBoard 的 SummaryWriter
-writer = SummaryWriter('model_visualization/test1')
+writer = SummaryWriter('tensorboard/model_visualization/test1')
 
 # 创建模型实例
 model = robertaLargeBiLSTMTextCNN2DCNN_visualtest()

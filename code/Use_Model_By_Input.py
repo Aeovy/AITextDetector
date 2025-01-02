@@ -15,5 +15,5 @@ if __name__ == '__main__':
         text = input("Please enter the sentence you want to detect (or type 'False' to exit): ")
         if text.lower() == 'false':
             break
-        result = predict(text, model,tokenizer)
-        print('The probability of the sentence being AI-generated is:', result)
+        result = round(predict(text, model,tokenizer),3)*100
+        print('The probability of the sentence being AI-generated is:', result, '%')
