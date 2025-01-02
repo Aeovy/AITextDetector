@@ -6,14 +6,12 @@ from tqdm import tqdm
 from Model import *
 from ReadFile import *
 if __name__ == '__main__':
-    modelname='robertaLargeBiLSTMTextCNN2DCNN'
+    modelname='robertaBiLSTMTextCNN2DCNN'
     writer=SummaryWriter("tensorboard/{0}/test2".format(modelname))
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True,prefetch_factor=2,num_workers=4)
     val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False,num_workers=4)
-    #model=robertaModelLarge()
-    #model=robertaBiLSTMTextCNN()
-    #model=robertaLargeBiLSTMTextCNN()
-    model=robertaLargeBiLSTMTextCNN2DCNN()
+    model=robertaBiLSTMTextCNN2DCNN()
+    #model=robertaLargeBiLSTMTextCNN2DCNN()
     #model.load_state_dict(torch.load('./model/robertaLargeBiLSTMTextCNN2DCNN_epoch1.pth',map_location=device))
     for name, param in model.named_parameters():
         if "roberta" in name:
@@ -85,7 +83,7 @@ if __name__ == '__main__':
                     model.train()
                     scheduler.step(val_f1)
                     writer.add_scalar('f1/steps', val_f1, steps)
-                    writer.add_scalar('lr/steps',scheduler.get_last_lr()[0],steps)
+                    writer.add_scalar('lr/steps',scheduler._last_lr[0],steps)
                     schedulersteps=0
         model.eval()
         val_preds = []

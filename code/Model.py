@@ -133,6 +133,86 @@ class robertaBiLSTMTextCNN(nn.Module):
         x = self.sigmoid(x)                  #[batch_size, 1]
         x = x.squeeze(1)                     #[batch_size]
         return x
+class robertaBiLSTMTextCNN2DCNN(nn.Module):
+    def __init__(self, roberta_model_name='hfl/chinese-roberta-wwm-ext', dropout_prob=0.3):
+        super(robertaBiLSTMTextCNN2DCNN, self).__init__()
+        self.roberta = AutoModel.from_pretrained(roberta_model_name,local_files_only=True)
+        # BiLSTM
+        self.bilstm = nn.LSTM(
+            input_size=self.roberta.config.hidden_size,  
+            hidden_size=256,                             
+            num_layers=1,                                
+            batch_first=True,                            
+            bidirectional=True#双向LSTM
+        )
+        self.convs = nn.ModuleList([
+            nn.Conv1d(
+                in_channels=512,#双向LSTM输出维度(256*2)
+                out_channels=256,    
+                kernel_size=3,       
+                padding=1
+            ),
+            nn.Conv1d(
+                in_channels=512,
+                out_channels=256,
+                kernel_size=5,
+                padding=2
+            ),
+            nn.Conv1d(
+                in_channels=512,
+                out_channels=256,
+                kernel_size=7,
+                padding=3
+            )
+        ])
+        self.conv2d = nn.Conv2d(
+                in_channels=3,
+                out_channels=64,    
+                kernel_size=(3,3),       
+                padding=1
+            )
+        self.conv2d_2 = nn.Conv2d(
+                in_channels=64,
+                out_channels=16,    
+                kernel_size=(3,3),       
+                padding=1
+            )
+        self.relu = nn.ReLU()
+        self.pool = nn.MaxPool1d(kernel_size=2)
+        self.pool2d=nn.MaxPool2d(kernel_size=(2,2))
+        self.fc = nn.Linear(16 * 32 * 128, 128)  #32通道* 64词向量维度 * 128 seq长度
+        self.dropout = nn.Dropout(dropout_prob)
+        self.fc2 = nn.Linear(128, 1)
+        self.sigmoid = nn.Sigmoid()
+    def forward(self, input_ids, attention_mask):
+        output = self.roberta(input_ids=input_ids, attention_mask=attention_mask)
+        last_hidden_state = output.last_hidden_state  # [batch_size, seq_len, hidden_dim]
+        #BiLSTM
+        lstm_out, _ = self.bilstm(last_hidden_state)#[batch_size, seq_len, 2*hidden_size]
+        x = lstm_out.permute(0, 2, 1)#[batch_size, dim, seq_len]
+        #CNN
+        conv_features = []
+        for conv in self.convs:
+            conv_x = conv(x)#[batch_size, out_channels, seq_len]
+            conv_x = self.relu(conv_x)
+            pooled_x = self.pool(conv_x)#[batch_size, out_channels, seq_len/2]
+            pooled_x=pooled_x.permute(0, 2, 1).unsqueeze(1)#[batch_size, seq_len/2, out_channels]
+            conv_features.append(pooled_x)
+        #拼接所有卷积核的输出
+        x = torch.cat(conv_features, dim=1)  #[batch_size, 3,out_channels * num_convs, seq_len]
+        x=self.conv2d(x)
+        x=self.relu(x)
+        x=self.pool2d(x)
+        x=self.conv2d_2(x)
+        x=self.pool2d(x)
+        x = x.view(x.size(0), -1)            #[batch_size, 256 * 3 * seq_len]
+        #全连接层
+        x = self.dropout(x)
+        x = self.fc(x)                       #[batch_size, 64]
+        x = self.fc2(x)                      #[batch_size, 1]
+        x = self.sigmoid(x)                  #[batch_size, 1]
+        x = x.squeeze(1)                     #[batch_size]
+        return x
 class robertaLargeBiLSTMTextCNN(nn.Module):
     def __init__(self, roberta_model_name='hfl/chinese-roberta-wwm-ext-large', dropout_prob=0.3):
         super(robertaLargeBiLSTMTextCNN, self).__init__()

@@ -6,10 +6,11 @@ from tqdm import tqdm
 from Model import *
 from ReadFile import *
 if __name__ == '__main__':
-    modelname='robertaLargeBiLSTMTextCNN2DCNN'
+    #modelname='robertaBiLSTMTextCNN2DCNN'
     writer=SummaryWriter("tensorboard/{0}/test1".format(modelname))
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True,prefetch_factor=2,num_workers=4)
     val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False,num_workers=4)
+    #model=robertaBiLSTMTextCNN2DCNN()
     #model=robertaModelLarge()
     #model=robertaBiLSTMTextCNN()
     #model=robertaLargeBiLSTMTextCNN()
@@ -23,7 +24,7 @@ if __name__ == '__main__':
     criterion = nn.BCELoss()
     #criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor(1.5))
 
-    optimizer=optim.AdamW(filter(lambda p:p.requires_grad,model.parameters()), lr=1e-6,weight_decay=1e-4)
+    optimizer=optim.AdamW(filter(lambda p:p.requires_grad,model.parameters()), lr=1e-4,weight_decay=1e-4)
     #optimizer=optim.AdamW(filter(lambda p:p.requires_grad,model.parameters()), lr=1e-7,weight_decay=1e-3)
     #学习率调度器测试
     scheduler=optim.lr_scheduler.ReduceLROnPlateau(optimizer,mode='min',factor=0.1,patience=5,verbose=True)
