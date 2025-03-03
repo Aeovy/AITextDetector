@@ -52,4 +52,5 @@ docker run -it -p 5000:5000 llm-cls-roberta python app.py
 
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+请勿将本项目不经修改直接作为课程结课作业
+This project is licensed under the GPLv3 License - see the [LICENSE](./LICENSE) file for details.
