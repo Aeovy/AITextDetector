@@ -1,4 +1,4 @@
-FROM python:3.11.10-slim
+FROM registry.cn-hangzhou.aliyuncs.com/library/python:3.11.10-slim
 RUN mkdir /code
 ADD ./code ./code
 COPY Dockerfile .
