@@ -6,11 +6,11 @@ from tqdm import tqdm
 from Model import *
 from ReadFile import *
 if __name__ == '__main__':
-    modelname='robertaBiLSTMTextCNN2DCNN'
+    modelname='robertaLargeBiLSTMTextCNN2DCNN'
     writer=SummaryWriter("tensorboard/{0}/test2".format(modelname))
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True,prefetch_factor=2,num_workers=4)
     val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False,num_workers=4)
-    model=robertaBiLSTMTextCNN2DCNN()
+    model=robertaLargeBiLSTMTextCNN2DCNN()
     #model=robertaLargeBiLSTMTextCNN2DCNN()
     #model.load_state_dict(torch.load('./model/robertaLargeBiLSTMTextCNN2DCNN_epoch1.pth',map_location=device))
     for name, param in model.named_parameters():
